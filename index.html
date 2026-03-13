@@ -1,428 +1,532 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>مولد برومبتات بطاقات العيد</title>
-  <style>
-    :root{
-      --bg1:#fffdf7;
-      --bg2:#eef8ff;
-      --card:#ffffff;
-      --text:#18314f;
-      --muted:#5d6b7e;
-      --line:#dce7f2;
-      --gold:#c79a2b;
-      --mint:#0f8b8d;
-      --shadow:0 14px 40px rgba(20,40,80,.10);
-      --radius:20px;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(circle at top right, #fff4d6 0, transparent 22%),
-        radial-gradient(circle at top left, #eaf7f0 0, transparent 18%),
-        linear-gradient(180deg,var(--bg1),var(--bg2));
-      min-height:100vh;
-    }
-    .wrap{
-      max-width:1280px;
-      margin:0 auto;
-      padding:28px 18px 40px;
-    }
-    .hero{
-      background:rgba(255,255,255,.72);
-      backdrop-filter: blur(10px);
-      border:1px solid rgba(255,255,255,.6);
-      border-radius:28px;
-      padding:26px 24px;
-      box-shadow:var(--shadow);
-      margin-bottom:20px;
-    }
-    .hero h1{
-      margin:0 0 8px;
-      font-size:32px;
-      line-height:1.3;
-    }
-    .hero p{
-      margin:0;
-      color:var(--muted);
-      line-height:1.9;
-      font-size:15px;
-    }
-    .grid{
-      display:grid;
-      grid-template-columns: 1.08fr .92fr;
-      gap:20px;
-      align-items:start;
-    }
-    .panel{
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:18px;
-    }
-    .panel h2{
-      margin:0 0 16px;
-      font-size:22px;
-    }
-    .section-title{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      margin:18px 0 12px;
-      font-size:16px;
-      font-weight:700;
-    }
-    .section-title::before{
-      content:"";
-      width:10px;
-      height:10px;
-      border-radius:999px;
-      background:linear-gradient(135deg,var(--gold),var(--mint));
-      flex:0 0 auto;
-    }
-    .fields{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:14px;
-    }
-    .full{grid-column:1/-1}
-    label{
-      display:block;
-      margin-bottom:7px;
-      font-size:14px;
-      font-weight:700;
-    }
-    input, select, textarea{
-      width:100%;
-      border:1px solid #cfdae7;
-      background:#fbfdff;
-      color:var(--text);
-      border-radius:14px;
-      padding:12px 13px;
-      font-size:15px;
-      outline:none;
-      transition:.2s ease;
-      font-family:inherit;
-    }
-    textarea{min-height:110px; resize:vertical; line-height:1.7}
-    input:focus, select:focus, textarea:focus{
-      border-color:#9ec7d8;
-      box-shadow:0 0 0 4px rgba(15,139,141,.10);
-      background:#fff;
-    }
-    .note{
-      margin-top:6px;
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.8;
-    }
-    .row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:16px;
-    }
-    button{
-      border:none;
-      border-radius:14px;
-      padding:12px 16px;
-      font-size:15px;
-      font-weight:700;
-      cursor:pointer;
-      transition:.2s ease;
-    }
-    .primary{
-      background:linear-gradient(135deg,var(--gold),#e0ba54);
-      color:#fff;
-      box-shadow:0 8px 18px rgba(199,154,43,.25);
-    }
-    .secondary{
-      background:#eef7f7;
-      color:#126d70;
-      border:1px solid #cde7e7;
-    }
-    .ghost{
-      background:#f7f9fc;
-      color:#44556d;
-      border:1px solid #d8e1eb;
-    }
-    button:hover{transform:translateY(-1px)}
-    .output{
-      min-height:380px;
-      white-space:pre-wrap;
-      font-family:Consolas, "Courier New", monospace;
-      direction:ltr;
-      text-align:left;
-      background:#fbfdff;
-    }
-    .preview-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:16px;
-    }
-    .preview-box{
-      border:1px solid var(--line);
-      border-radius:18px;
-      overflow:hidden;
-      background:#fcfeff;
-    }
-    .preview-box .head{
-      padding:12px 14px;
-      border-bottom:1px solid var(--line);
-      background:linear-gradient(180deg,#ffffff,#f8fbff);
-      font-weight:700;
-    }
-    .preview-stage{
-      aspect-ratio:9/16;
-      width:100%;
-      background:
-        linear-gradient(180deg,#f7fbff,#fffdf8);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:#70829a;
-      position:relative;
-      overflow:hidden;
-    }
-    .preview-stage img{
-      width:100%;
-      height:100%;
-      object-fit:contain;
-      display:block;
-      background:#fff;
-    }
-    .placeholder{
-      padding:18px;
-      text-align:center;
-      line-height:1.9;
-      font-size:14px;
-    }
-    .small{
-      font-size:12px;
-      color:var(--muted);
-    }
-    .status{
-      margin-top:10px;
-      font-size:13px;
-      color:#0d6b6f;
-      font-weight:700;
-      min-height:20px;
-    }
-    .pill{
-      display:inline-block;
-      padding:4px 10px;
-      border-radius:999px;
-      background:#eef7f7;
-      color:#126d70;
-      font-size:12px;
-      margin-inline-start:8px;
-      border:1px solid #cde7e7;
-    }
-    @media (max-width: 980px){
-      .grid{grid-template-columns:1fr}
-      .preview-grid,.fields{grid-template-columns:1fr}
-    }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <div class="hero">
-      <h1>مولد برومبتات بطاقات العيد العربية</h1>
-      <p>
-        اكتب النصوص الأربعة، اختر النمط، ثم ولّد البرومبت النهائي لنسخه ولصقه في نانو بانانا.
-        يمكنك أيضًا لصق <span class="pill">Data URL</span> أو <span class="pill">Base64</span> أو حتى وسم
-        <span class="pill">&lt;img src="..."&gt;</span> داخل حقلي المعاينة للنسخة الداكنة والنسخة الفاتحة.
-      </p>
-    </div>
-
-    <div class="grid">
-      <div class="panel">
-        <h2>إعدادات البرومبت</h2>
-
-        <div class="section-title">النصوص</div>
-        <div class="fields">
-          <div>
-            <label for="title">العنوان</label>
-            <input id="title" value="عيدكم سعيد" />
-          </div>
-          <div>
-            <label for="subtitle">العبارة الثانية</label>
-            <input id="subtitle" value="تقبل الله منا ومنكم" />
-          </div>
-          <div>
-            <label for="footer">العبارة الثالثة</label>
-            <input id="footer" value="كل عام وأنتم بخير" />
-          </div>
-          <div>
-            <label for="signature">التوقيع</label>
-            <input id="signature" value="منيرة بنت سليمان" />
-          </div>
-        </div>
-
-        <div class="section-title">الخيارات الفنية</div>
-        <div class="fields">
-          <div>
-            <label for="theme">النمط</label>
-            <select id="theme">
-              <option value="dark">داكن فاخر</option>
-              <option value="light" selected>فاتح مشرق</option>
-            </select>
-          </div>
-          <div>
-            <label for="ornament">كثافة الزخرفة</label>
-            <select id="ornament">
-              <option value="light">خفيفة</option>
-              <option value="medium" selected>متوسطة</option>
-              <option value="rich">غنية</option>
-            </select>
-          </div>
-          <div>
-            <label for="freedom">حرية الخلفية</label>
-            <select id="freedom">
-              <option value="balanced" selected>متوازنة</option>
-              <option value="free">حرة</option>
-              <option value="very_free">حرة جدًا</option>
-            </select>
-          </div>
-          <div>
-            <label for="calligraphy">صرامة المخطوطة</label>
-            <select id="calligraphy">
-              <option value="strict" selected>صارمة جدًا</option>
-              <option value="balanced">متوازنة</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="section-title">المعاينات بالترميز</div>
-        <div class="preview-grid">
-          <div class="preview-box">
-            <div class="head">النسخة الداكنة</div>
-            <div class="preview-stage" id="darkPreview">
-              <div class="placeholder">ألصق هنا Data URL أو Base64 أو وسم صورة في الحقل أدناه لعرض المعاينة الداكنة.</div>
-            </div>
-            <div style="padding:14px">
-              <label for="darkCode">ترميز المعاينة الداكنة</label>
-              <textarea id="darkCode" placeholder='مثال: data:image/png;base64,iVBORw0... أو &lt;img src="data:image/png;base64,..."&gt;'></textarea>
-              <div class="row">
-                <button class="secondary" type="button" onclick="applyPreview('dark')">عرض المعاينة</button>
-                <button class="ghost" type="button" onclick="clearPreview('dark')">مسح</button>
-              </div>
-              <div class="status" id="darkStatus"></div>
-            </div>
-          </div>
-
-          <div class="preview-box">
-            <div class="head">النسخة الفاتحة</div>
-            <div class="preview-stage" id="lightPreview">
-              <div class="placeholder">ألصق هنا Data URL أو Base64 أو وسم صورة في الحقل أدناه لعرض المعاينة الفاتحة.</div>
-            </div>
-            <div style="padding:14px">
-              <label for="lightCode">ترميز المعاينة الفاتحة</label>
-              <textarea id="lightCode" placeholder='مثال: data:image/jpeg;base64,/9j/... أو &lt;img src="data:image/jpeg;base64,..."&gt;'></textarea>
-              <div class="row">
-                <button class="secondary" type="button" onclick="applyPreview('light')">عرض المعاينة</button>
-                <button class="ghost" type="button" onclick="clearPreview('light')">مسح</button>
-              </div>
-              <div class="status" id="lightStatus"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="section-title">توليد البرومبت</div>
-        <div class="row">
-          <button class="primary" type="button" onclick="generatePrompt()">توليد البرومبت</button>
-          <button class="secondary" type="button" onclick="copyPrompt()">نسخ البرومبت</button>
-          <button class="ghost" type="button" onclick="downloadPrompt()">تنزيل TXT</button>
-          <button class="ghost" type="button" onclick="resetForm()">إعادة تعيين</button>
-        </div>
-        <div class="status" id="mainStatus"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>مولد برومبتات بطاقات العيد</title>
+    <style>
+      :root {
+        --bg1: #fffdf7;
+        --bg2: #eef8ff;
+        --card: #ffffff;
+        --text: #18314f;
+        --muted: #5d6b7e;
+        --line: #dce7f2;
+        --gold: #c79a2b;
+        --mint: #0f8b8d;
+        --shadow: 0 14px 40px rgba(20, 40, 80, 0.1);
+        --radius: 20px;
+        --active: #f2c96c;
+        --danger: #b42318;
+        --dangerbg: #fff1f1;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top right, #fff4d6 0, transparent 22%),
+          radial-gradient(circle at top left, #eaf7f0 0, transparent 18%),
+          linear-gradient(180deg, var(--bg1), var(--bg2));
+        min-height: 100vh;
+      }
+      .wrap {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 28px 18px 40px;
+      }
+      .hero {
+        background: rgba(255, 255, 255, 0.72);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        border-radius: 28px;
+        padding: 26px 24px;
+        box-shadow: var(--shadow);
+        margin-bottom: 20px;
+      }
+      .hero h1 {
+        margin: 0 0 8px;
+        font-size: 32px;
+        line-height: 1.3;
+      }
+      .hero p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.9;
+        font-size: 15px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1.08fr 0.92fr;
+        gap: 20px;
+        align-items: start;
+      }
+      .panel {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 18px;
+      }
+      .panel h2 {
+        margin: 0 0 16px;
+        font-size: 22px;
+      }
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 18px 0 12px;
+        font-size: 16px;
+        font-weight: 700;
+      }
+      .section-title::before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--gold), var(--mint));
+        flex: 0 0 auto;
+      }
+      .fields {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .full {
+        grid-column: 1/-1;
+      }
+      label {
+        display: block;
+        margin-bottom: 7px;
+        font-size: 14px;
+        font-weight: 700;
+      }
+      input,
+      select,
+      textarea {
+        width: 100%;
+        border: 1px solid #cfdae7;
+        background: #fbfdff;
+        color: var(--text);
+        border-radius: 14px;
+        padding: 12px 13px;
+        font-size: 15px;
+        outline: none;
+        transition: 0.2s ease;
+        font-family: inherit;
+      }
+      textarea {
+        min-height: 380px;
+        resize: vertical;
+        line-height: 1.7;
+      }
+      input:focus,
+      select:focus,
+      textarea:focus {
+        border-color: #9ec7d8;
+        box-shadow: 0 0 0 4px rgba(15, 139, 141, 0.1);
+        background: #fff;
+      }
+      .note {
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.8;
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 16px;
+      }
+      button {
+        border: none;
+        border-radius: 14px;
+        padding: 12px 16px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s ease;
+      }
+      .primary {
+        background: linear-gradient(135deg, var(--gold), #e0ba54);
+        color: #fff;
+        box-shadow: 0 8px 18px rgba(199, 154, 43, 0.25);
+      }
+      .secondary {
+        background: #eef7f7;
+        color: #126d70;
+        border: 1px solid #cde7e7;
+      }
+      .ghost {
+        background: #f7f9fc;
+        color: #44556d;
+        border: 1px solid #d8e1eb;
+      }
+      button:hover {
+        transform: translateY(-1px);
+      }
+      .output {
+        white-space: pre-wrap;
+        font-family: Consolas, "Courier New", monospace;
+        direction: ltr;
+        text-align: left;
+        background: #fbfdff;
+      }
+      .preview-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .preview-box {
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        overflow: hidden;
+        background: #fcfeff;
+        transition: 0.2s ease;
+      }
+      .preview-box.active {
+        border-color: var(--active);
+        box-shadow: 0 0 0 4px rgba(242, 201, 108, 0.18);
+        transform: translateY(-1px);
+      }
+      .preview-box .head {
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--line);
+        background: linear-gradient(180deg, #ffffff, #f8fbff);
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .preview-stage {
+        aspect-ratio: 9/16;
+        width: 100%;
+        background: linear-gradient(180deg, #f7fbff, #fffdf8);
+        display: block;
+        overflow: hidden;
+      }
+      .preview-stage img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        background: #fff;
+      }
+      .status {
+        margin-top: 10px;
+        font-size: 13px;
+        color: #0d6b6f;
+        font-weight: 700;
+        min-height: 20px;
+      }
+      .status.error {
+        color: var(--danger);
+        background: var(--dangerbg);
+        border: 1px solid #f3c3c3;
+        padding: 10px 12px;
+        border-radius: 12px;
+      }
+      a.link {
+        color: #0d6b6f;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      a.link:hover {
+        text-decoration: underline;
+      }
+      @media (max-width: 980px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .preview-grid,
+        .fields {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="hero">
+        <h1>مولد برومبتات بطاقات العيد العربية</h1>
+        <p>
+          اكتب سطرين للتهنئة مع التوقيع، ثم اختر النمط المناسب، وبعدها ولّد
+          البرومبت النهائي لنسخه ولصقه في نانو بانانا. الحقول الثلاثة كلها
+          مطلوبة.
+        </p>
       </div>
 
-      <div class="panel">
-        <h2>البرومبت النهائي</h2>
-        <textarea id="output" class="output" spellcheck="false"></textarea>
-        <div class="note">
-          انسخ النص الناتج كاملًا والصقه مباشرةً في نانو بانانا. لا يحتاج هذا الملف إلى رفع كـ JSON صارم.
+      <div class="grid">
+        <div class="panel">
+          <h2>إعدادات البرومبت</h2>
+
+          <div class="section-title">النصوص</div>
+          <div class="fields">
+            <div>
+              <label for="title">العنوان</label>
+              <input id="title" value="عيدكم سعيد" />
+            </div>
+            <div>
+              <label for="subtitle">العبارة الثانية</label>
+              <input id="subtitle" value="تقبل الله منا ومنكم" />
+            </div>
+            <div class="full">
+              <label for="signature">التوقيع</label>
+              <input id="signature" value="  اكتب اسمك" />
+            </div>
+          </div>
+
+          <div class="section-title">الخيارات الفنية</div>
+          <div class="fields">
+            <div>
+              <label for="theme">النمط</label>
+              <select id="theme" onchange="updateThemePreview()">
+                <option value="dark">داكن فاخر</option>
+                <option value="light" selected>فاتح مشرق</option>
+              </select>
+            </div>
+            <div>
+              <label for="ornament">كثافة الزخرفة</label>
+              <select id="ornament">
+                <option value="light">خفيفة</option>
+                <option value="medium" selected>متوسطة</option>
+                <option value="rich">غنية</option>
+              </select>
+            </div>
+            <div>
+              <label for="freedom">حرية الخلفية</label>
+              <select id="freedom">
+                <option value="balanced" selected>متوازنة</option>
+                <option value="free">حرة</option>
+                <option value="very_free">حرة جدًا</option>
+              </select>
+            </div>
+            <div>
+              <label for="calligraphy">صرامة المخطوطة</label>
+              <select id="calligraphy">
+                <option value="strict" selected>صارمة جدًا</option>
+                <option value="balanced">متوازنة</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="section-title">المعاينات</div>
+          <div class="preview-grid">
+            <div class="preview-box" id="darkBox">
+              <div class="head">
+                <span>النسخة الداكنة</span>
+                <a
+                  class="link"
+                  href="https://ensanbinadam.github.io/eid_prompt_generator/eid2.png"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >فتح الصورة</a
+                >
+              </div>
+              <div class="preview-stage">
+                <img
+                  src="https://ensanbinadam.github.io/eid_prompt_generator/eid2.png"
+                  alt="معاينة النسخة الداكنة"
+                />
+              </div>
+            </div>
+
+            <div class="preview-box active" id="lightBox">
+              <div class="head">
+                <span>النسخة الفاتحة</span>
+                <a
+                  class="link"
+                  href="https://ensanbinadam.github.io/eid_prompt_generator/eid1.png"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >فتح الصورة</a
+                >
+              </div>
+              <div class="preview-stage">
+                <img
+                  src="https://ensanbinadam.github.io/eid_prompt_generator/eid1.png"
+                  alt="معاينة النسخة الفاتحة"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="section-title">توليد البرومبت</div>
+          <div class="row">
+            <button class="primary" type="button" onclick="generatePrompt()">
+              توليد البرومبت
+            </button>
+            <button class="secondary" type="button" onclick="copyPrompt()">
+              نسخ البرومبت
+            </button>
+            <button class="ghost" type="button" onclick="downloadPrompt()">
+              تنزيل TXT
+            </button>
+            <button class="ghost" type="button" onclick="resetForm()">
+              إعادة تعيين
+            </button>
+          </div>
+          <div class="status" id="mainStatus"></div>
+        </div>
+
+        <div class="panel">
+          <h2>البرومبت النهائي</h2>
+          <textarea id="output" class="output" spellcheck="false"></textarea>
+          <div class="note">
+            انسخ النص الناتج كاملًا والصقه مباشرةً في نانو بانانا.
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <script>
-    const darkBase = {
-      mood: "elegant, warm, festive, spiritual, premium, luminous",
-      style: "luxury arabic-islamic contemporary greeting card",
-      paletteMode: "artistically flexible",
-      paletteColors: ["#08152E","#0F2F5F","#F8FAFC","#F3E7C9","#F3B35C","#0F8B8D"],
-      paletteInstruction: "you may preserve these colors or artistically reinvent the palette if the result remains premium, readable, festive, and balanced",
-      backgroundFeeling: "spiritual festive glow with elegant Eid atmosphere",
-      backgroundElements: [
-        "crescent moon","lanterns","islamic geometric pattern","arabesque ornament","mosque arches",
-        "soft stars","subtle light rays","decorative luminous haze","refined abstract eid motifs",
-        "ornamental borders","luxury textures","glowing night sky"
-      ]
-    };
+    <script>
+      const darkBase = {
+        mood: "elegant, warm, festive, spiritual, premium, luminous",
+        style: "luxury arabic-islamic contemporary greeting card",
+        paletteMode: "artistically flexible",
+        paletteColors: [
+          "#08152E",
+          "#0F2F5F",
+          "#F8FAFC",
+          "#F3E7C9",
+          "#F3B35C",
+          "#0F8B8D",
+        ],
+        paletteInstruction:
+          "you may preserve these colors or artistically reinvent the palette if the result remains premium, readable, festive, and balanced",
+        backgroundFeeling: "spiritual festive glow with elegant Eid atmosphere",
+        backgroundElements: [
+          "crescent moon",
+          "lanterns",
+          "islamic geometric pattern",
+          "arabesque ornament",
+          "mosque arches",
+          "soft stars",
+          "subtle light rays",
+          "decorative luminous haze",
+          "refined abstract eid motifs",
+          "ornamental borders",
+          "luxury textures",
+          "glowing night sky",
+        ],
+      };
 
-    const lightBase = {
-      mood: "bright, elegant, warm, festive, spiritual, premium, luminous, fresh",
-      style: "luxury arabic-islamic contemporary greeting card with a bright refined atmosphere",
-      paletteMode: "artistically very flexible",
-      paletteColors: ["#FFFDF7","#F8FAFC","#FFF4D6","#F3E7C9","#EAF7F0","#DCEEFF","#F7EBFF","#F3B35C","#0F8B8D","#0F4C81"],
-      paletteInstruction: "prefer bright, light, radiant, pastel, soft, or medium-tone festive palettes. you may use ivory, cream, gold, sky blue, turquoise, mint, lavender, soft peach, or other elegant luminous eid colors, while preserving strong contrast, readability, premium quality, and visual balance",
-      backgroundFeeling: "bright festive Eid atmosphere with elegant luminous beauty",
-      backgroundElements: [
-        "crescent moon","lanterns","islamic geometric pattern","arabesque ornament","mosque arches",
-        "soft stars","subtle light rays","decorative luminous haze","refined abstract eid motifs",
-        "ornamental borders","luxury textures","bright luminous sky","soft radiant background",
-        "light festive glow","warm elegant daylight-inspired atmosphere"
-      ]
-    };
+      const lightBase = {
+        mood: "bright, elegant, warm, festive, spiritual, premium, luminous, fresh",
+        style:
+          "luxury arabic-islamic contemporary greeting card with a bright refined atmosphere",
+        paletteMode: "artistically very flexible",
+        paletteColors: [
+          "#FFFDF7",
+          "#F8FAFC",
+          "#FFF4D6",
+          "#F3E7C9",
+          "#EAF7F0",
+          "#DCEEFF",
+          "#F7EBFF",
+          "#F3B35C",
+          "#0F8B8D",
+          "#0F4C81",
+        ],
+        paletteInstruction:
+          "prefer bright, light, radiant, pastel, soft, or medium-tone festive palettes. you may use ivory, cream, gold, sky blue, turquoise, mint, lavender, soft peach, or other elegant luminous eid colors, while preserving strong contrast, readability, premium quality, and visual balance",
+        backgroundFeeling:
+          "bright festive Eid atmosphere with elegant luminous beauty",
+        backgroundElements: [
+          "crescent moon",
+          "lanterns",
+          "islamic geometric pattern",
+          "arabesque ornament",
+          "mosque arches",
+          "soft stars",
+          "subtle light rays",
+          "decorative luminous haze",
+          "refined abstract eid motifs",
+          "ornamental borders",
+          "luxury textures",
+          "bright luminous sky",
+          "soft radiant background",
+          "light festive glow",
+          "warm elegant daylight-inspired atmosphere",
+        ],
+      };
 
-    function escapeJsonString(str){
-      return String(str).replace(/\\/g,'\\\\').replace(/"/g,'\\"');
-    }
+      function escapeJsonString(str) {
+        return String(str).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+      }
 
-    function getConfig(){
-      const theme = document.getElementById('theme').value;
-      const ornament = document.getElementById('ornament').value;
-      const freedom = document.getElementById('freedom').value;
-      const calligraphy = document.getElementById('calligraphy').value;
-      const base = theme === 'dark' ? darkBase : lightBase;
+      function setStatus(message, isError = false) {
+        const el = document.getElementById("mainStatus");
+        el.textContent = message;
+        el.className = isError ? "status error" : "status";
+      }
 
-      const ornamentText = {
-        light: "light delicate ornament with restrained decorative richness",
-        medium: "balanced elegant ornament with tasteful decorative richness",
-        rich: "rich luxurious ornament with disciplined decorative abundance"
-      }[ornament];
+      function validateFields() {
+        const title = document.getElementById("title").value.trim();
+        const subtitle = document.getElementById("subtitle").value.trim();
+        const signature = document.getElementById("signature").value.trim();
 
-      const freedomText = {
-        balanced: "background creativity should remain elegant, disciplined, and supportive",
-        free: "background creativity may be more inventive while preserving readability and balance",
-        very_free: "background creativity may be highly inventive and artistically bold while preserving readability and premium harmony"
-      }[freedom];
+        if (!title || !subtitle || !signature) {
+          setStatus(
+            "لا يمكن توليد البرومبت قبل تعبئة الحقول الثلاثة: العنوان، العبارة الثانية، والتوقيع.",
+            true,
+          );
+          return false;
+        }
+        return true;
+      }
 
-      const calligraphyText = {
-        strict: "all four text lines must unmistakably look like genuine graphic Arabic calligraphy and must never look like plain font text",
-        balanced: "all four text lines should clearly feel calligraphic while remaining highly readable"
-      }[calligraphy];
+      function getConfig() {
+        const theme = document.getElementById("theme").value;
+        const ornament = document.getElementById("ornament").value;
+        const freedom = document.getElementById("freedom").value;
+        const calligraphy = document.getElementById("calligraphy").value;
+        const base = theme === "dark" ? darkBase : lightBase;
 
-      return { theme, ornamentText, freedomText, calligraphyText, base };
-    }
+        const ornamentText = {
+          light: "light delicate ornament with restrained decorative richness",
+          medium: "balanced elegant ornament with tasteful decorative richness",
+          rich: "rich luxurious ornament with disciplined decorative abundance",
+        }[ornament];
 
-    function buildPrompt(){
-      const title = escapeJsonString(document.getElementById('title').value.trim());
-      const subtitle = escapeJsonString(document.getElementById('subtitle').value.trim());
-      const footer = escapeJsonString(document.getElementById('footer').value.trim());
-      const signature = escapeJsonString(document.getElementById('signature').value.trim());
-      const cfg = getConfig();
+        const freedomText = {
+          balanced:
+            "background creativity should remain elegant, disciplined, and supportive",
+          free: "background creativity may be more inventive while preserving readability and balance",
+          very_free:
+            "background creativity may be highly inventive and artistically bold while preserving readability and premium harmony",
+        }[freedom];
 
-      return `Create exactly one finished premium Arabic Eid greeting card.
+        const calligraphyText = {
+          strict:
+            "all three text lines must unmistakably look like genuine graphic Arabic calligraphy and must never look like plain font text",
+          balanced:
+            "all three text lines should clearly feel calligraphic while remaining highly readable",
+        }[calligraphy];
+
+        return { theme, ornamentText, freedomText, calligraphyText, base };
+      }
+
+      function buildPrompt() {
+        const title = escapeJsonString(
+          document.getElementById("title").value.trim(),
+        );
+        const subtitle = escapeJsonString(
+          document.getElementById("subtitle").value.trim(),
+        );
+        const signature = escapeJsonString(
+          document.getElementById("signature").value.trim(),
+        );
+        const cfg = getConfig();
+
+        return `Create exactly one finished premium Arabic Eid greeting card.
 
 MASTER RULES:
 - All visible text must be Arabic only.
@@ -442,8 +546,7 @@ MASTER RULES:
 
 ARABIC CALLIGRAPHY RULES:
 - Render all Arabic text as genuine graphic Arabic calligraphy, not as plain typed text and not as a standard digital font.
-- The title, subtitle, footer, and signature must all be calligraphic.
-- The footer must also be genuine Arabic graphic calligraphy and must never appear as a normal digital font.
+- The title, subtitle, and signature must all be calligraphic.
 - The signature must also be genuine Arabic graphic calligraphy and must never appear as a normal digital font.
 - All phrases must look like custom-designed Arabic calligraphic artwork integrated into the design.
 - Use beautiful Arabic calligraphic styling chosen artistically by your own taste.
@@ -458,7 +561,6 @@ ARABIC CALLIGRAPHY RULES:
 CALLIGRAPHY HIERARCHY:
 - Main title: bold, expressive, premium Arabic graphic calligraphy, visually dominant.
 - Subtitle: elegant Arabic graphic calligraphy, lighter than the title but still clearly calligraphic.
-- Footer: refined Arabic graphic calligraphy, elegant, readable, and clearly calligraphic.
 - Signature: small elegant Arabic calligraphic signature, clearly readable, visually refined, and subordinate to the main greeting text.
 - Maintain one consistent artistic family across all lines.
 
@@ -518,14 +620,14 @@ DESIGN SPECIFICATION (JSON):
   "palette_guidance": {
     "mode": "${cfg.base.paletteMode}",
     "suggested_base_colors": [
-      ${cfg.base.paletteColors.map(c => `"${c}"`).join(',\n      ')}
+      ${cfg.base.paletteColors.map((c) => `"${c}"`).join(",\n      ")}
     ],
     "instruction": "${cfg.base.paletteInstruction}"
   },
   "background_guidance": {
     "preferred_feeling": "${cfg.base.backgroundFeeling}",
     "possible_elements": [
-      ${cfg.base.backgroundElements.map(e => `"${e}"`).join(',\n      ')}
+      ${cfg.base.backgroundElements.map((e) => `"${e}"`).join(",\n      ")}
     ],
     "rules": [
       "background must remain supportive to the text",
@@ -541,7 +643,6 @@ DESIGN SPECIFICATION (JSON):
     "calligraphy_style": "beautiful premium arabic graphic calligraphy chosen artistically by the model",
     "title_treatment": "bold expressive premium custom arabic calligraphy",
     "subtitle_treatment": "refined medium-weight arabic graphic calligraphy",
-    "footer_treatment": "refined clearly calligraphic arabic graphic calligraphy, never plain font",
     "signature_treatment": "small elegant refined arabic graphic calligraphy, never plain font",
     "family_consistency": true,
     "priority": "beauty_with_readability"
@@ -549,17 +650,14 @@ DESIGN SPECIFICATION (JSON):
   "content": {
     "title": "${title}",
     "subtitle": "${subtitle}",
-    "footer": "${footer}",
     "signature": "${signature}"
   },
   "size_guidance": {
     "title_scale": "very large",
     "subtitle_scale": "medium",
-    "footer_scale": "small medium",
     "signature_scale": "small",
     "title_visual_priority": "highest",
     "subtitle_visual_priority": "medium",
-    "footer_visual_priority": "clear but secondary",
     "signature_visual_priority": "subtle"
   },
   "layout": {
@@ -571,8 +669,7 @@ DESIGN SPECIFICATION (JSON):
     "require_text_balance": true,
     "require_clear_separation_between_lines": true,
     "subtitle_line_break_behavior": "may split gracefully into two balanced lines if needed",
-    "footer_line_break_behavior": "prefer one elegant line if possible",
-    "signature_position": "below the footer with comfortable spacing, centered, near the lower safe area"
+    "signature_position": "below the subtitle with comfortable spacing, centered, near the lower safe area"
   },
   "quality_rules": {
     "high_legibility": true,
@@ -604,98 +701,74 @@ DESIGN SPECIFICATION (JSON):
     "no crop marks"
   ]
 }`;
-    }
+      }
 
-    function generatePrompt(){
-      const prompt = buildPrompt();
-      document.getElementById('output').value = prompt;
-      document.getElementById('mainStatus').textContent = 'تم توليد البرومبت بنجاح.';
-    }
+      function generatePrompt() {
+        if (!validateFields()) {
+          document.getElementById("output").value = "";
+          return;
+        }
+        const prompt = buildPrompt();
+        document.getElementById("output").value = prompt;
+        setStatus("تم توليد البرومبت بنجاح.");
+      }
 
-    async function copyPrompt(){
-      const output = document.getElementById('output');
-      if(!output.value.trim()) generatePrompt();
-      await navigator.clipboard.writeText(output.value);
-      document.getElementById('mainStatus').textContent = 'تم نسخ البرومبت.';
-    }
+      async function copyPrompt() {
+        if (!validateFields()) {
+          document.getElementById("output").value = "";
+          return;
+        }
+        const output = document.getElementById("output");
+        if (!output.value.trim()) generatePrompt();
+        if (!output.value.trim()) return;
+        await navigator.clipboard.writeText(output.value);
+        setStatus("تم نسخ البرومبت.");
+      }
 
-    function downloadPrompt(){
-      const output = document.getElementById('output');
-      if(!output.value.trim()) generatePrompt();
-      const blob = new Blob([output.value], {type:'text/plain;charset=utf-8'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'eid-prompt.txt';
-      a.click();
-      URL.revokeObjectURL(a.href);
-      document.getElementById('mainStatus').textContent = 'تم تنزيل الملف.';
-    }
+      function downloadPrompt() {
+        if (!validateFields()) {
+          document.getElementById("output").value = "";
+          return;
+        }
+        const output = document.getElementById("output");
+        if (!output.value.trim()) generatePrompt();
+        if (!output.value.trim()) return;
+        const blob = new Blob([output.value], {
+          type: "text/plain;charset=utf-8",
+        });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "eid-prompt.txt";
+        a.click();
+        URL.revokeObjectURL(a.href);
+        setStatus("تم تنزيل الملف.");
+      }
 
-    function resetForm(){
-      document.getElementById('title').value = 'عيدكم سعيد';
-      document.getElementById('subtitle').value = 'تقبل الله منا ومنكم';
-      document.getElementById('footer').value = 'كل عام وأنتم بخير';
-      document.getElementById('signature').value = 'منيرة بنت سليمان';
-      document.getElementById('theme').value = 'light';
-      document.getElementById('ornament').value = 'medium';
-      document.getElementById('freedom').value = 'balanced';
-      document.getElementById('calligraphy').value = 'strict';
-      clearPreview('dark');
-      clearPreview('light');
+      function updateThemePreview() {
+        const theme = document.getElementById("theme").value;
+        document
+          .getElementById("darkBox")
+          .classList.toggle("active", theme === "dark");
+        document
+          .getElementById("lightBox")
+          .classList.toggle("active", theme === "light");
+      }
+
+      function resetForm() {
+        document.getElementById("title").value = "عيدكم سعيد";
+        document.getElementById("subtitle").value = "تقبل الله منا ومنكم";
+        document.getElementById("signature").value = "منيرة بنت سليمان";
+        document.getElementById("theme").value = "light";
+        document.getElementById("ornament").value = "medium";
+        document.getElementById("freedom").value = "balanced";
+        document.getElementById("calligraphy").value = "strict";
+        updateThemePreview();
+        document.getElementById("output").value = "";
+        setStatus("تمت إعادة التعيين.");
+      }
+
+      updateThemePreview();
       generatePrompt();
-      document.getElementById('mainStatus').textContent = 'تمت إعادة التعيين.';
-    }
-
-    function extractImageSource(text){
-      if(!text || !text.trim()) return null;
-      const raw = text.trim();
-
-      const imgSrcMatch = raw.match(/<img[^>]+src\s*=\s*["']([^"']+)["']/i);
-      if(imgSrcMatch) return imgSrcMatch[1];
-
-      if(raw.startsWith('data:image/')) return raw;
-
-      if(/^https?:\/\//i.test(raw)) return raw;
-
-      if(/^[A-Za-z0-9+/=\s]+$/.test(raw) && raw.replace(/\s+/g,'').length > 100){
-        const cleaned = raw.replace(/\s+/g,'');
-        return `data:image/png;base64,${cleaned}`;
-      }
-      return null;
-    }
-
-    function applyPreview(kind){
-      const codeEl = document.getElementById(kind + 'Code');
-      const stage = document.getElementById(kind + 'Preview');
-      const status = document.getElementById(kind + 'Status');
-      const src = extractImageSource(codeEl.value);
-
-      if(!src){
-        status.textContent = 'تعذر قراءة الترميز. ألصق Data URL أو Base64 أو وسم صورة.';
-        return;
-      }
-
-      stage.innerHTML = '';
-      const img = document.createElement('img');
-      img.alt = kind === 'dark' ? 'معاينة النسخة الداكنة' : 'معاينة النسخة الفاتحة';
-      img.onload = () => status.textContent = 'تم عرض المعاينة.';
-      img.onerror = () => {
-        stage.innerHTML = '<div class="placeholder">تعذر عرض الصورة من الترميز الملصق.</div>';
-        status.textContent = 'فشل عرض المعاينة.';
-      };
-      img.src = src;
-      stage.appendChild(img);
-    }
-
-    function clearPreview(kind){
-      const stage = document.getElementById(kind + 'Preview');
-      const status = document.getElementById(kind + 'Status');
-      document.getElementById(kind + 'Code').value = '';
-      stage.innerHTML = '<div class="placeholder">لا توجد معاينة حالية.</div>';
-      status.textContent = '';
-    }
-
-    generatePrompt();
-  </script>
-</body>
+    </script>
+  </body>
 </html>
