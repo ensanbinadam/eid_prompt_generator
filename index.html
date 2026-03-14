@@ -1,4 +1,6 @@
 
+
+
 <!doctype html>
 <html lang="ar" dir="rtl">
   <head>
@@ -423,7 +425,7 @@
             <button class="primary" type="button" onclick="generatePrompt()">
               توليد البرومبت
             </button>
-            <button class="secondary" type="button" onclick="copyPrompt()">
+            <button class="secondary" type="button" onclick="copyPrompt(this)">
               نسخ البرومبت
             </button>
             <button class="ghost" type="button" onclick="downloadPrompt()">
@@ -525,10 +527,6 @@
         ],
       };
 
-      function escapeJsonString(str) {
-        return String(str).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-      }
-
       function setStatus(message, isError = false) {
         const el = document.getElementById("mainStatus");
         el.textContent = message;
@@ -582,18 +580,12 @@
       }
 
       function buildPrompt() {
-        const title = escapeJsonString(
-          document.getElementById("title").value.trim(),
-        );
-        const subtitle = escapeJsonString(
-          document.getElementById("subtitle").value.trim(),
-        );
-        const signature = escapeJsonString(
-          document.getElementById("signature").value.trim(),
-        );
+        const title = document.getElementById("title").value.trim();
+        const subtitle = document.getElementById("subtitle").value.trim();
+        const signature = document.getElementById("signature").value.trim();
         const cfg = getConfig();
 
-        return `Create exactly one finished premium Arabic Eid greeting card.
+        const rulesText = `Create exactly one finished premium Arabic Eid greeting card.
 
 MASTER RULES:
 - All visible text must be Arabic only.
@@ -645,129 +637,128 @@ FULL CREATIVE FREEDOM FOR BACKGROUND AND ORNAMENT:
 - The design is not required to use dark colors; it may creatively use bright, light, pastel, radiant, or medium-tone festive palettes if they suit the composition beautifully.
 - Beauty, elegance, atmosphere, and balance are more important than literal repetition of any previous design.
 
-DESIGN SPECIFICATION (JSON):
-{
-  "project_type": "arabic_eid_greeting_card",
-  "language": "ar",
-  "direction": "rtl",
-  "canvas": {
-    "aspect_ratio": "9:16",
-    "orientation": "portrait",
-    "target_pixels": {
-      "width": 1080,
-      "height": 1920
-    }
-  },
-  "safe_area_guidance": "use comfortable invisible margins and keep all important text safely inside them",
-  "text_policy": {
-    "arabic_only": true,
-    "preserve_exact_text": true,
-    "preserve_every_character": true,
-    "preserve_wording_exactly": true,
-    "never_replace_words": true,
-    "never_shorten_words": true,
-    "proper_arabic_shaping": true,
-    "rtl_layout": true,
-    "no_extra_text": true,
-    "visible_text_source": "content_only",
-    "important_note": "if the signature contains the word بنت, it must remain بنت exactly and must never become بن"
-  },
-  "creative_direction": {
-    "theme": "eid_al_fitr",
-    "mood": "${cfg.base.mood}",
-    "overall_style": "${cfg.base.style}",
-    "design_mode": "controlled_creative_flexibility",
-    "background_generation_mode": "full_creative_eid_inspired",
-    "allow_layout_creativity": true,
-    "allow_background_creativity": true,
-    "allow_ornament_creativity": true,
-    "allow_palette_creativity": true,
-    "require_visual_discipline": true
-  },
-  "palette_guidance": {
-    "mode": "${cfg.base.paletteMode}",
-    "suggested_base_colors": [
-      ${cfg.base.paletteColors.map((c) => `"${c}"`).join(",\n      ")}
-    ],
-    "instruction": "${cfg.base.paletteInstruction}"
-  },
-  "background_guidance": {
-    "preferred_feeling": "${cfg.base.backgroundFeeling}",
-    "possible_elements": [
-      ${cfg.base.backgroundElements.map((e) => `"${e}"`).join(",\n      ")}
-    ],
-    "rules": [
-      "background must remain supportive to the text",
-      "avoid clutter",
-      "avoid heavy distraction behind lettering",
-      "maintain premium balance",
-      "maintain depth and atmosphere"
-    ]
-  },
-  "typography": {
-    "text_rendering_mode": "all_text_as_graphic_arabic_calligraphy",
-    "calligraphy_source": "model_own_artistic_judgment",
-    "calligraphy_style": "beautiful premium arabic graphic calligraphy chosen artistically by the model",
-    "title_treatment": "bold expressive premium custom arabic calligraphy",
-    "subtitle_treatment": "refined medium-weight arabic graphic calligraphy",
-    "signature_treatment": "small elegant refined arabic graphic calligraphy, never plain font",
-    "family_consistency": true,
-    "priority": "beauty_with_readability"
-  },
-  "content": {
-    "title": "${title}",
-    "subtitle": "${subtitle}",
-    "signature": "${signature}"
-  },
-  "size_guidance": {
-    "title_scale": "very large",
-    "subtitle_scale": "medium",
-    "signature_scale": "small",
-    "title_visual_priority": "highest",
-    "subtitle_visual_priority": "medium",
-    "signature_visual_priority": "subtle"
-  },
-  "layout": {
-    "text_alignment": "center",
-    "text_flow": "rtl",
-    "composition": "balanced premium vertical hierarchy",
-    "spacing": "elegant, intentional, breathable, visually balanced",
-    "allow_dynamic_positioning": true,
-    "require_text_balance": true,
-    "require_clear_separation_between_lines": true,
-    "subtitle_line_break_behavior": "may split gracefully into two balanced lines if needed",
-    "signature_position": "below the subtitle with comfortable spacing, centered, near the lower safe area"
-  },
-  "quality_rules": {
-    "high_legibility": true,
-    "balanced_spacing": true,
-    "avoid_overlap": true,
-    "avoid_crowding": true,
-    "clear_text_edges": true,
-    "reduce_dead_space": true,
-    "maintain_visual_harmony": true,
-    "preserve_calligraphy_readability": true,
-    "every_line_must_look_calligraphic": true
-  },
-  "negative_constraints": [
-    "no english text",
-    "no broken arabic letters",
-    "no mirrored text",
-    "no random glyphs",
-    "no clutter",
-    "no watermark",
-    "no logo",
-    "no unreadable_calligraphy",
-    "no tiny text",
-    "no chaotic background",
-    "no excessive ornamental noise",
-    "no plain typed text appearance",
-    "no visible guide numbers",
-    "no visible percentages",
-    "no visible layout annotations",
-    "no crop marks"
-  ]
-}`;
+DESIGN SPECIFICATION (JSON):`;
+
+        const designSpec = {
+          "project_type": "arabic_eid_greeting_card",
+          "language": "ar",
+          "direction": "rtl",
+          "canvas": {
+            "aspect_ratio": "9:16",
+            "orientation": "portrait",
+            "target_pixels": {
+              "width": 1080,
+              "height": 1920
+            }
+          },
+          "safe_area_guidance": "use comfortable invisible margins and keep all important text safely inside them",
+          "text_policy": {
+            "arabic_only": true,
+            "preserve_exact_text": true,
+            "preserve_every_character": true,
+            "preserve_wording_exactly": true,
+            "never_replace_words": true,
+            "never_shorten_words": true,
+            "proper_arabic_shaping": true,
+            "rtl_layout": true,
+            "no_extra_text": true,
+            "visible_text_source": "content_only",
+            "important_note": "if the signature contains the word بنت, it must remain بنت exactly and must never become بن"
+          },
+          "creative_direction": {
+            "theme": "eid_al_fitr",
+            "mood": cfg.base.mood,
+            "overall_style": cfg.base.style,
+            "design_mode": "controlled_creative_flexibility",
+            "background_generation_mode": "full_creative_eid_inspired",
+            "allow_layout_creativity": true,
+            "allow_background_creativity": true,
+            "allow_ornament_creativity": true,
+            "allow_palette_creativity": true,
+            "require_visual_discipline": true
+          },
+          "palette_guidance": {
+            "mode": cfg.base.paletteMode,
+            "suggested_base_colors": cfg.base.paletteColors,
+            "instruction": cfg.base.paletteInstruction
+          },
+          "background_guidance": {
+            "preferred_feeling": cfg.base.backgroundFeeling,
+            "possible_elements": cfg.base.backgroundElements,
+            "rules": [
+              "background must remain supportive to the text",
+              "avoid clutter",
+              "avoid heavy distraction behind lettering",
+              "maintain premium balance",
+              "maintain depth and atmosphere"
+            ]
+          },
+          "typography": {
+            "text_rendering_mode": "all_text_as_graphic_arabic_calligraphy",
+            "calligraphy_source": "model_own_artistic_judgment",
+            "calligraphy_style": "beautiful premium arabic graphic calligraphy chosen artistically by the model",
+            "title_treatment": "bold expressive premium custom arabic calligraphy",
+            "subtitle_treatment": "refined medium-weight arabic graphic calligraphy",
+            "signature_treatment": "small elegant refined arabic graphic calligraphy, never plain font",
+            "family_consistency": true,
+            "priority": "beauty_with_readability"
+          },
+          "content": {
+            "title": title,
+            "subtitle": subtitle,
+            "signature": signature
+          },
+          "size_guidance": {
+            "title_scale": "very large",
+            "subtitle_scale": "medium",
+            "signature_scale": "small",
+            "title_visual_priority": "highest",
+            "subtitle_visual_priority": "medium",
+            "signature_visual_priority": "subtle"
+          },
+          "layout": {
+            "text_alignment": "center",
+            "text_flow": "rtl",
+            "composition": "balanced premium vertical hierarchy",
+            "spacing": "elegant, intentional, breathable, visually balanced",
+            "allow_dynamic_positioning": true,
+            "require_text_balance": true,
+            "require_clear_separation_between_lines": true,
+            "subtitle_line_break_behavior": "may split gracefully into two balanced lines if needed",
+            "signature_position": "below the subtitle with comfortable spacing, centered, near the lower safe area"
+          },
+          "quality_rules": {
+            "high_legibility": true,
+            "balanced_spacing": true,
+            "avoid_overlap": true,
+            "avoid_crowding": true,
+            "clear_text_edges": true,
+            "reduce_dead_space": true,
+            "maintain_visual_harmony": true,
+            "preserve_calligraphy_readability": true,
+            "every_line_must_look_calligraphic": true
+          },
+          "negative_constraints": [
+            "no english text",
+            "no broken arabic letters",
+            "no mirrored text",
+            "no random glyphs",
+            "no clutter",
+            "no watermark",
+            "no logo",
+            "no unreadable_calligraphy",
+            "no tiny text",
+            "no chaotic background",
+            "no excessive ornamental noise",
+            "no plain typed text appearance",
+            "no visible guide numbers",
+            "no visible percentages",
+            "no visible layout annotations",
+            "no crop marks"
+          ]
+        };
+
+        return rulesText + "\n" + JSON.stringify(designSpec, null, 2);
       }
 
       function generatePrompt() {
@@ -780,7 +771,7 @@ DESIGN SPECIFICATION (JSON):
         setStatus("تم توليد البرومبت بنجاح.");
       }
 
-      async function copyPrompt() {
+      async function copyPrompt(btn) {
         if (!validateFields()) {
           document.getElementById("output").value = "";
           return;
@@ -789,7 +780,18 @@ DESIGN SPECIFICATION (JSON):
         if (!output.value.trim()) generatePrompt();
         if (!output.value.trim()) return;
         await navigator.clipboard.writeText(output.value);
-        setStatus("تم نسخ البرومبت.");
+        
+        if (btn) {
+          const originalText = btn.textContent;
+          btn.textContent = "تم النسخ ✔";
+          btn.style.backgroundColor = "#eaf7f0"; 
+          setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.backgroundColor = ""; 
+          }, 2000);
+        }
+
+        setStatus("تم نسخ البرومبت بنجاح عبر الحافظة.");
       }
 
       function downloadPrompt() {
@@ -836,6 +838,13 @@ DESIGN SPECIFICATION (JSON):
 
       updateThemePreview();
       generatePrompt();
+
+      document.querySelectorAll("input, select").forEach(element => {
+        element.addEventListener("input", () => {
+          if (element.id === "theme") updateThemePreview();
+          generatePrompt();
+        });
+      });
     </script>
     <footer style="text-align: center; padding: 22px 16px; line-height: 1.9">
       <div style="margin-bottom: 10px">
@@ -854,7 +863,6 @@ DESIGN SPECIFICATION (JSON):
           تمت البرمجة باستخدام تشات جي بي تي
         </a>
       </div>
-</div>
 
       <a
         href="https://t.me/Insan_Notebook"
