@@ -1,12 +1,19 @@
-
 <!doctype html>
 <html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>مولد برومبتات بطاقات العيد</title>
-    <link rel="icon" href="/eid_prompt_generator/favicon.ico" type="image/x-icon">
-<link rel="shortcut icon" href="/eid_prompt_generator/favicon.ico" type="image/x-icon">
+    <link
+      rel="icon"
+      href="/eid_prompt_generator/favicon.ico"
+      type="image/x-icon"
+    />
+    <link
+      rel="shortcut icon"
+      href="/eid_prompt_generator/favicon.ico"
+      type="image/x-icon"
+    />
     <style>
       :root {
         --bg1: #fffdf7;
@@ -253,6 +260,30 @@
           grid-template-columns: 1fr;
         }
       }
+      .link-btn,
+      .link-btn:visited {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        border: 1px solid #cde7e7;
+        border-radius: 14px;
+        padding: 12px 16px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s ease;
+        background: #eef7f7;
+        color: #126d70;
+        box-sizing: border-box;
+        line-height: 1.2;
+        appearance: none;
+        -webkit-appearance: none;
+      }
+
+      .link-btn:hover {
+        transform: translateY(-1px);
+      }
     </style>
   </head>
   <body>
@@ -372,6 +403,13 @@
             <button class="ghost" type="button" onclick="downloadPrompt()">
               تنزيل TXT
             </button>
+            <a
+              class="link-btn"
+              href="https://gemini.google/ye/overview/image-generation/?hl=ar-YE"
+              target="_blank"
+              rel="noopener noreferrer"
+              >افتح نانو بانانا</a
+            >
             <button class="ghost" type="button" onclick="resetForm()">
               إعادة تعيين
             </button>
