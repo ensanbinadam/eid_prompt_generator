@@ -73,15 +73,20 @@
         display: grid;
         grid-template-columns: 1.08fr 0.92fr;
         gap: 20px;
-        align-items: start;
+        align-items: stretch;
       }
+
       .panel {
         background: var(--card);
         border: 1px solid var(--line);
         border-radius: var(--radius);
         box-shadow: var(--shadow);
         padding: 18px;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
       }
+
       .panel h2 {
         margin: 0 0 16px;
         font-size: 22px;
@@ -182,6 +187,8 @@
         transform: translateY(-1px);
       }
       .output {
+        min-height: 520px;
+        flex: 1;
         white-space: pre-wrap;
         font-family: Consolas, "Courier New", monospace;
         direction: ltr;
@@ -359,7 +366,7 @@
                 <span>النسخة الداكنة</span>
                 <a
                   class="link"
-                  href="https://ensanbinadam.github.io/eid_prompt_generator/eid2.png"
+                  href="https://ensanbinadam.github.io/eid_prompt_generator/eid2.jpg"
                   target="_blank"
                   rel="noopener noreferrer"
                   >فتح الصورة</a
@@ -367,7 +374,7 @@
               </div>
               <div class="preview-stage">
                 <img
-                  src="https://ensanbinadam.github.io/eid_prompt_generator/eid2.png"
+                  src="https://ensanbinadam.github.io/eid_prompt_generator/eid2.jpg"
                   alt="معاينة النسخة الداكنة"
                 />
               </div>
@@ -378,7 +385,7 @@
                 <span>النسخة الفاتحة</span>
                 <a
                   class="link"
-                  href="https://ensanbinadam.github.io/eid_prompt_generator/eid1.png"
+                  href="https://ensanbinadam.github.io/eid_prompt_generator/eid1.jpg"
                   target="_blank"
                   rel="noopener noreferrer"
                   >فتح الصورة</a
@@ -386,7 +393,7 @@
               </div>
               <div class="preview-stage">
                 <img
-                  src="https://ensanbinadam.github.io/eid_prompt_generator/eid1.png"
+                  src="https://ensanbinadam.github.io/eid_prompt_generator/eid1.jpg"
                   alt="معاينة النسخة الفاتحة"
                 />
               </div>
